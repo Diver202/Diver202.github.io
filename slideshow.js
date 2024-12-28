@@ -1,16 +1,11 @@
-const slides = document.querySelectorAll('.slide');
+const slideshowInner = document.querySelector('.slideshow-inner');
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
         let currentSlide = 0;
 
         function showNextSlide() {
-            const previousSlide = slides[currentSlide];
-            previousSlide.classList.remove('active');
-            previousSlide.classList.add('previous');
-
-            currentSlide = (currentSlide + 1) % slides.length;
-
-            const nextSlide = slides[currentSlide];
-            nextSlide.classList.remove('previous');
-            nextSlide.classList.add('active');
+            currentSlide = (currentSlide + 1) % totalSlides;
+            slideshowInner.style.transform = `translateX(-${currentSlide * 100}%)`;
         }
 
         setInterval(showNextSlide, 5000); // Change slide every 5 seconds
