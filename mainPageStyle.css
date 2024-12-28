@@ -1,7 +1,6 @@
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
 }
 .slideshow-container {
     position: relative;
@@ -32,7 +31,7 @@ body {
     width: 25%; /* Set the desired size of the image */
   border-radius: 50%; /* Make the image circular */
   position: absolute; /* Position the image relative to the carousel */
-  top:300px; /* Align to the bottom edge of the carousel */
+  top:320px; /* Align to the bottom edge of the carousel */
   left: 10%; /* Set fixed distance from the left edge of the screen */
   transform: translateY(-50%); /* Adjust vertical alignment so the center lies on the bottom edge */
   border: 10px solid white; /* Optional border for styling */
@@ -43,7 +42,7 @@ body {
     width: 40%; /* Set the desired size of the image */
   border-radius: 50%; /* Make the image circular */
   position: absolute; /* Position the image relative to the carousel */
-  top:300px; /* Align to the bottom edge of the carousel */
+  top:320px; /* Align to the bottom edge of the carousel */
   left: 5%; /* Set fixed distance from the left edge of the screen */
   transform: translateY(-50%); /* Adjust vertical alignment so the center lies on the bottom edge */
   border: 5px solid white; /* Optional border for styling */
@@ -66,6 +65,65 @@ body {
         0px 0px 140px #0ff; /* outer cyan */
 }
 
+.title{
+    display:block;
+    margin-top:20px;
+    margin-left:35%;
+}
+
+#name{
+    font-size:5vw;
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:600;
+}
+
+#subtitle{
+    font-size: 2vw;
+    font-family:Arial, Helvetica, sans-serif;
+    color:rgb(151, 151, 151);
+}
+
+.blogcards{
+    margin-top:40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Space between cards */
+    justify-content: center; /* Center the cards */
+}
+.card{
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    width: calc(33.33% - 20px); /* 3 cards in a row */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  }
+
+.date{
+    color:rgb(120, 120, 120);
+    font-size:12px;
+    font-family: Arial, Helvetica, sans-serif; 
+    text-align: right;
+}
+#lifeCard{
+    background-image: linear-gradient(rgb(255, 255, 255) 80%, rgb(211, 255, 244));
+}
+
+@media screen and (max-width: 768px) {
+    .card{
+      width: calc(50% - 20px); /* 2 cards in a row on smaller screens */
+    }
+  }
+
+@media screen and (max-width: 480px) {
+    .card {
+      width: 100%; /* 1 card in a row on very small screens */
+    }
+  }
+    
 @font-face {
     font-family: "Alpha Brights";
     src: url(assets/Alpha\ Brights.ttf);
@@ -93,5 +151,18 @@ body {
         0px 0px 100px #f0f, /* middle magenta */
         0px 0px 140px #0ff; /* outer cyan */
     }
+
+    .title{
+        margin-left:45%
+    }
+
+    #name{
+        font-size:6vw;
+    }
+
+    #subtitle{
+        font-size:2.5vw;
+    }
+
 
 }
