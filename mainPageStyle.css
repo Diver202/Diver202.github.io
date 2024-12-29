@@ -1,6 +1,7 @@
 
 body {
     margin: 0;
+    
 }
 .slideshow-container {
     position: relative;
@@ -83,6 +84,9 @@ body {
     color:rgb(151, 151, 151);
 }
 
+.socialIcon{
+    margin:20px;
+}
 .blogcards{
     margin-top:40px;
     display: flex;
@@ -108,8 +112,25 @@ body {
     font-family: Arial, Helvetica, sans-serif; 
     text-align: right;
 }
+
+.cardType{
+    color:rgb(82, 82, 82);
+    font-size:14px;
+    font-family: Arial; 
+    font-style:italic;
+    text-align: left;
+}
+
+.cardData{
+    display: flex;
+    justify-content: space-between;
+}
 #lifeCard{
     background-image: linear-gradient(rgb(255, 255, 255) 80%, rgb(211, 255, 244));
+}
+
+#projectCard{
+    background-image: linear-gradient(rgb(255, 255, 255) 80%, rgb(237, 211, 255));
 }
 
 @media screen and (max-width: 768px) {
