@@ -16,25 +16,28 @@ body {
   font-size: 2.5rem;
   font-weight: bold;
   color: #333;
-  margin-top:40px;
-  margin-bottom: 10px;
-  text-align:center;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-/* Gallery container */
+/* Centered gallery container */
 .gallery {
-  display: grid;
-  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Centers the tiles horizontally */
+  gap: 15px; /* Increased gap slightly for a larger gallery */
   padding: 10px;
-  max-width: 1200px;
+  max-width: 1400px; /* Expanded maximum width to accommodate larger paintings */
   margin: 0 auto;
-  grid-template-columns: repeat(5, 1fr);
 }
 
 .gallery-item {
   position: relative;
   overflow: hidden;
   aspect-ratio: 1; /* Ensures square items */
+  width: calc(22% - 15px); /* Increased size to make paintings bigger */
+  max-width: 250px; /* Ensures the tiles don't grow too large */
   border: 2px solid #ddd;
   border-radius: 8px;
 }
@@ -74,13 +77,13 @@ body {
 
 /* Responsive design */
 @media (max-width: 768px) {
-  .gallery {
-    grid-template-columns: repeat(3, 1fr);
+  .gallery-item {
+    width: calc(30% - 15px); /* Slightly larger for 3 per row on tablets */
   }
 }
 
 @media (max-width: 480px) {
-  .gallery {
-    grid-template-columns: repeat(2, 1fr);
+  .gallery-item {
+    width: calc(45% - 15px); /* Larger size for 2 per row on small screens */
   }
 }
