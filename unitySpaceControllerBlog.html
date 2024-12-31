@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unity Spaceship Controller</title>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
+    <link href="blogs.css" rel = "stylesheet" />
+    <!-- HIGHLIGHT.JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+</head>
+<body>
+
+    <!-- Floating Back Button -->
+    <a href="index.html" class="floating-back-button">
+        <img src="assets/back arrow.svg" alt="Back">
+    </a>
+          
+    </a>
+    <img class = "banner" src="assets/Controller image.png">
+
+    <div class = "text">
+        <h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Unity Spaceship Controller</h1>
+        
+        
+        <p class="mb-3 text-gray-500 dark:text-gray-400  first-letter:text-7xl first-letter:font-bold first-letter:text-gray-900 dark:first-letter:text-gray-100 first-letter:me-3 first-letter:float-start">I have always been excited about making my own games and sharing them with others. This year, I took on learning Unity. Simulating rigid body physics is quite fun in Unity, but I wished to go further. So, in December, I took on trying to create a spaceship controller - with all assets of my own. I used Unity’s scripting system in C# to write the code for this controller, and Blender for creating the 3D models, for the main player, the enemies and some other assets.</p>
+
+        <p class="text-gray-500 dark:text-gray-400">I started with making simple controls for a cube to simulate the player, which was quickly replaced with a model I made in Blender, which was based on a swallow for it’s overall shape. The model is very low – poly, so it’s easier on the framerate, as well as making a collider for it easier.</p>
+        <br>
+        <p class="text-gray-500 dark:text-gray-400">To control the movement of the player’s spaceship, I declare the following variables, which will hold values for the thrust, pitching torque, yaw torque, roll torque and maximum velocity of the player. </p>
+
+<pre><code class="language-csharp">
+public bool pressingThrottle = false;
+
+public bool pressingBack;
+
+public float pitchPower, rollPower, yawPower, enginePower, backthrust;
+
+private float activeRoll, activePitch, activeYaw;
+
+public float maxVelocity;
+
+private Rigidbody rb;
+    </code></pre>
+        
+        
+        <br>
+        <p class="text-gray-500 dark:text-gray-400">In reality, a spaceship travelling through space should not have a cap on its velocity if it continues accelerating (except, of course, the speed of light); I believe that I want to continue to develop this simple controller into a game, having a cap on the speed limit would make it just that little bit easier for players to navigate.</p>
+        <br>
+        <p class="text-gray-500 dark:text-gray-400">In the start() function, which gets executed as soon as the script is executed, and not after that, I set up some constraints on the movement of the player, to make it more like actually moving in space. So, I removed angular drag and linear drag. I also removed Unity’s default gravitational acceleration.</p>
+    
+<pre><code class="language-csharp">
+private void Start()
+{
+    // Ensure a Rigidbody is attached
+    rb = GetComponent<Rigidbody>();
+    rb.useGravity = false; // No gravity in space
+    rb.drag = 0f; // No linear drag
+    rb.angularDrag = 0f; // No angular drag
+}
+    </code></pre>
+    <br>
+    <p class="text-gray-500 dark:text-gray-400">The player has basic AddForce statements in the Update() function, which simulate thrust acceleration, as well as pitch, yaw and roll by the thrusters. These were all given separate axes in the unity engine, which makes adding these forces and torques more intuitive, and easy. I also wrote a script to instantiate a particle system to simulate the thruster flames when the corresponding user inputs are given.</p>
+    <br>
+    <video src = "assets/Control test Unity Spaceship.mp4" class = "contentMedia" autoplay muted loop></video>
+    <br>
+    <p class="text-gray-500 dark:text-gray-400">I felt that the player did not have a good sense of orientation while manoeuvring the spaceship. Which is why I added a sun as a source of reference for the player to orient themselves. It also doubles as a light source for the environment, as well as adding to the space aesthetic. The sun uses a Universal Render Pipeline shader – emitter material, which gives it the bloom. I have also made another particle system for the sun, to make the glowing bits of gas escaping its surface. These also use a URP shader. Currently the sun does no damage to the player. </p>
+    <br>
+    <p class="text-gray-500 dark:text-gray-400">I have also implemented laser bolts and homing missiles, as weapons for the player. I used volumetric lines for the laser bolts with a parented capsule collider. But, I did model the homing missile in Blender. The code for the laser bolt is quite simple. It instantiates a prefab at the position of the laser blaster in the spaceship model (an empty object which is a child of the main player), and it is given an initial impulse.</p>
+    <br>
+    <p class="text-gray-500 dark:text-gray-400">The homing missiles are more interesting to have a look at. They get instantiated two at a time, from twin points on either “wing” on the player, which are again empty objects which are children of the player model. These homing missiles are spawned in a similar fashion to the laser bolts, but instead of just receiving an initial impulse and going in that direction, these seek out all objects tagged “Enemy”, which are visible in the main camera, and then target the closest one to the player at the time zero. If no such targets are found, then the missile shoots off in the direction the player was facing. If there is such a target, then the missile calculates the distance to its target, and based on that, either chases it smoothly using a Slerp() function, or if the distance is less than a fixed parameter called “accuracyDistance”, the missile moves directly towards the object. There were problems with this approach wherein the missile would essentially just keep orbiting the target until it expired. So, to combat this, there is a final “Hail Mary” where the missile just moves to the position of the target, if it is close enough that it should have hit the target.</p>
+    <br>
+<pre><code class="language-csharp">
+private void Start()
+{
+private Transform targetEnemy;
+private Rigidbody rb;
+public float initialSpeed = 600f; // Initial forward speed
+public float homingSpeed = 600f; // Constant forward speed
+public float turnSpeed = 5f; // Smooth turn speed
+public float accuracyDistance = 10f; // Distance to switch to LookAt for accuracy
+
+void Start()
+{
+    rb = GetComponent<Rigidbody>();
+    if (rb == null)
+    {
+        Debug.LogError("Rigidbody component not found!");
+        return;
+    }
+
+    // Set initial forward velocity
+    rb.velocity = transform.forward * initialSpeed;
+
+    // Acquire target
+    AcquireTarget();
+}
+
+void AcquireTarget()
+{
+    GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+    Camera mainCamera = Camera.main;
+
+    if (mainCamera == null)
+    {
+        Debug.LogError("Main Camera is not tagged correctly!");
+        return;
+    }
+
+    float closestDistance = Mathf.Infinity;
+    Transform closestEnemy = null;
+
+    foreach (GameObject enemy in enemies)
+    {
+        Transform enemyTransform = enemy.transform;
+
+        // Check visibility in the main camera
+        Vector3 viewportPoint = mainCamera.WorldToViewportPoint(enemyTransform.position);
+        bool isVisible = viewportPoint.z > 0 && viewportPoint.x > 0 && viewportPoint.x < 1 && viewportPoint.y > 0 && viewportPoint.y < 1;
+
+        if (isVisible)
+        {
+            float distance = Vector3.Distance(transform.position, enemyTransform.position);
+
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestEnemy = enemyTransform;
+            }
+        }
+    }
+
+    if (closestEnemy != null)
+    {
+        targetEnemy = closestEnemy;
+        Debug.Log("Target acquired: " + targetEnemy.name);
+    }
+    else
+    {
+        Debug.Log("No visible targets found.");
+    }
+}
+
+private void FixedUpdate()
+{
+    if (targetEnemy == null)
+        return;
+
+    // Calculate the distance to the target
+    float distanceToTarget = Vector3.Distance(transform.position, targetEnemy.position);
+
+    if (distanceToTarget > accuracyDistance)
+    {
+        // Smoothly curve towards the target
+        Vector3 directionToTarget = (targetEnemy.position - transform.position).normalized;
+        Vector3 currentVelocity = rb.velocity.normalized;
+        Vector3 desiredVelocity = directionToTarget;
+
+        // Smoothly adjust the direction using Slerp
+        Vector3 newVelocity = Vector3.Slerp(currentVelocity, desiredVelocity, turnSpeed * Time.fixedDeltaTime);
+
+        // Update velocity based on homing speed
+        rb.velocity = newVelocity * homingSpeed;
+    }
+    if (distanceToTarget <accuracyDistance &&  distanceToTarget > 10)
+    {
+        // Use LookAt for precision
+        transform.LookAt(targetEnemy);
+        rb.velocity = transform.forward * homingSpeed;
+    }
+    else
+    {
+        //Hail Mary
+        transform.position = targetEnemy.transform.position;
+    }
+}
+
+private void OnCollisionEnter(Collision collision)
+{
+    if (collision.gameObject.tag == "Enemy")
+    {
+        Destroy(gameObject);
+    }
+}
+}
+    </code></pre>
+    <br>
+    <p class="text-gray-500 dark:text-gray-400">The missile summons an explosion prefab when it collides with a target tagged “Enemy”, and the missile entity is destroyed.</p>
+    <br>
+    <p class="text-gray-500 dark:text-gray-400">I wanted to try the homing missiles and the laser blaster on moving enemies, so I made another spaceship in Blender, this time taking inspiration from a bee. This is because I gave it a very basic player-following algorithm, and it just rams into the player, destroying itself in the process. This “Kamikaze” tactic is similar to how bees usually kill themselves when they sting, so it felt like an opt design choice.</p>
+    <br>
+    <img src="assets/Kamikaze spaceship.png" class = "contentMedia" alt = "Kamikaze spaceship"></img>
+    <br>
+    <p class="text-gray-500 dark:text-gray-400">The script for the Kamikaze Enemy to follow the player is quite simple. The object checks for the position of the player, determines the normalised vector towards the player, and moves in that direction at a fixed velocity. A quaternion keeps information about its rotation, so the enemy can keep looking in the direction of its velocity.</p>
+    </div>
+
+
+
+    <!-- SCRIPT REF -->
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+
+</body>
+</html>

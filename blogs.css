@@ -11,7 +11,14 @@ body{
 }
 
 .text{
-    padding:100px;
+    width:70%;
+    margin:auto;
+    padding:20px;
+}
+
+.contentMedia {
+    border-radius: 15px; /* Adjust the value to your preference */
+    overflow: hidden; /* Ensures no content overflows the rounded corners */
 }
 
 /* Floating back button styles */
