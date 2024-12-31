@@ -32,6 +32,7 @@ body {
 }
 
 .gallery-item {
+  display:block;
   position: relative;
   overflow: hidden;
   aspect-ratio: 1; /* Ensures square items */
