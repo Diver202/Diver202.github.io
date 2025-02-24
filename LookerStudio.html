@@ -6,6 +6,8 @@
     <title>A look at Looker Studio</title>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
     <link href="blogs.css" rel = "stylesheet" />
+    <!-- HIGHLIGHT.JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
 </head>
 <body>
 
@@ -69,9 +71,76 @@
             <li>
                 <span class="font-semibold text-gray-900 dark:text-white">Collaboration: </span>Real-time editing and sharing is possible.
             </li>
+        </ol>
+        <br>
+        
+        <br>
+        <h2 class="text-4xl font-bold dark:text-white">Examples</h2>
         <br>
 
+        <h2 class="mb-2 text-2xl font-semibold text-gray-900 dark:text-white">1. Creating a calculated field</h2>
+        <p class="text-gray-500 dark:text-gray-400">Let’s add another field to check the survival rate for the titanic dataset. Using the following formula:</p>
+        <pre><code class="language-python">
+(SUM(Survived) / COUNT(PassengerId))
+            </code></pre>
+        <br>
+        <img class = "contentMedia" src = "assets/lookerStudio/Calculated Field.png">
+        <br>
+        <p class="text-gray-500 dark:text-gray-400">Add a scorecard which will show you the overall survival rate of the passengers.</p>
 
+        <br>
+        <img class = "contentMedia" src = "assets/lookerStudio/Scorecard.png">
+        <br>
+
+        <h2 class="mb-2 text-2xl font-semibold text-gray-900 dark:text-white">2. Categorising age groups</h2>
+        <p class="text-gray-500 dark:text-gray-400">Now lets check out the survival rate of different age groups for Titanic. For this, add another field "Age Group" for categorising as follows:</p>
+        <pre><code class="language-python">
+CASE 
+    WHEN CAST(Age AS NUMBER) < 18 THEN "Child"
+    WHEN CAST(Age AS NUMBER) BETWEEN 18 AND 35 THEN "Young Adult"
+    WHEN CAST(Age AS NUMBER) BETWEEN 36 AND 50 THEN "Middle Aged"
+    WHEN CAST(Age AS NUMBER) > 50 THEN "Senior"
+    ELSE "Unknown"
+END
+        </code></pre>
+        <br>
+        <p class="text-gray-500 dark:text-gray-400">We casted the age field as a number, because looker studio was reading it as a text datatype.</p>
+        <br>
+        <p class="text-gray-500 dark:text-gray-400">Now, lets plot the survival rate of different age groups in a bar chart. The unkown values are for records with missing age fields.</p>
+        <br>
+        <img src = "assets/lookerStudio/SurvivalRate by Age.png" class = "contentMedia">
+        <br>
+
+        <h2 class="mb-2 text-2xl font-semibold text-gray-900 dark:text-white">3. Categorising by family size.</h2>
+        <p class="text-gray-500 dark:text-gray-400">Add a field to for the family size of the individual on board. This is calculated by adding the number of siblings, the number of parents and 1 for the person themselves.</p>
+        <pre><code class="language-python">
+Sibsp + Parch + 1
+    </code></pre>
+    <br>
+    <img src = "assets/lookerStudio/SurvivalRate by family size.png">
+    <br>
+
+    <!-- Applications -->
+    <br>
+    <h2 class="text-4xl font-bold dark:text-white">Applications</h2>
+    <br>
+    <p class="text-gray-500 dark:text-gray-400">Looker Studio is used by businesses, individuals, institutions and hobbyists to make beautiful representations of their data. It is used in various domains like <span class="font-semibold text-gray-900 dark:text-white">Marketing Performance Analysis, Sales and Revenue Reporting, Customer Engagement Tracking, Social Media analytics </span>, and <span class="font-semibold text-gray-900 dark:text-white">Financial Data.</span></p>
+    <br>
+
+    <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+
+    <p class="text-gray-500 dark:text-gray-400">In conclusion, Looker Studio is a powerful and accessible tool for data visualization and reporting. Its integration capabilities, ease of use, and interactive features make it an essential tool for businesses and analysts. By following this guide, users can set up and utilize Looker Studio effectively to transform data into actionable insights.</p>
+
+    <!-- Further Reading -->
+    <br>
+    <h2 class="text-4xl font-bold dark:text-white">Further Reading</h2>
+    <br>
+    <ol class="space-y-1 text-gray-500 list-decimal list-inside dark:text-gray-400">
+        <li><a href="https://support.google.com/lookerstudio/" target="_blank" class="text-blue-600 hover:underline dark:text-blue-400">Looker Studio Official Documentation</a></li>
+        <li><a href="https://cloud.google.com/bigquery/docs/" target="_blank" class="text-blue-600 hover:underline dark:text-blue-400">Google Cloud BigQuery Integration Guide</a></li>
+        <li><a href="https://developers.google.com/sheets/api" target="_blank" class="text-blue-600 hover:underline dark:text-blue-400">Google Sheets API for Looker Studio</a></li>
+        <li><a href="https://lookerstudio.google.com/u/0/reporting" target="_blank" class="text-blue-600 hover:underline dark:text-blue-400">Community Tutorials and Case Studies</a></li>
+    </ol>
 
         
     </div>
@@ -115,6 +184,8 @@
 
     <!-- SCRIPT REF -->
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
 
 </body>
 </html>
