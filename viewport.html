@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viewport</title>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
+    <link href="blogs.css" rel = "stylesheet" />
+</head>
+<body>
+
+    <!-- Floating Back Button -->
+    <a href="index.html" class="floating-back-button">
+        <img src="assets/back arrow.svg" alt="Back">
+    </a>
+          
+    </a>
+    <img class = "banner" src="assets/Viewport banner.png">
+
+    <div class = "text">
+        <h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Viewport</h1>
+        
+        
+        <p class="mb-3 text-gray-500 dark:text-gray-400  first-letter:text-7xl first-letter:font-bold first-letter:text-gray-900 dark:first-letter:text-gray-100 first-letter:me-3 first-letter:float-start">Ever since I became the Secretary of DigiS (The game development club of IITGN), I have been engaged in a lot of game development and rendering projects. For me, the end of 2025 was marked by our second position in Inter IIT Tech Meet 14.0, held at IIT Patna in game development. This article explains the decisions taken in the development of Viewport - our submission for the Tech Meet.</p>
+        <p class="text-gray-500 dark:text-gray-400">The theme for the problem statement was “Three-level platformer”. That was it, the rest was entirely up to our interpretation. My teammates – Hem, Shubham, Nilay, and I came up with the idea of a game where the player had access to 3 views, and those would somehow be connected with the idea of having three levels in the game. This idea later developed into the game, a 3D forced-perspective platformer, where your view of the level decides how the character interacts with the environment.</p>
+        <br>
+        <p class="text-gray-500 dark:text-gray-400">For the story, we went for a game where the player is a test subject for an ethically dubious science research facility. A disembodied voice, by the name of T.E.S.S, follows the player throughout the game, acting as the main antagonist. The player completes a series of 3 levels, in which they have to use the main gameplay mechanic of view switching to solve puzzles and escape the facility. The video below demonstrates the simplest implementation of this mechanic, the first obstacle in the first level. The player attains access to isometric view to get past the wall.</p>
+        <br>
+        <video src = "assets/Viewport Video 1.mp4" class = "contentMedia" autoplay muted loop></video>
+        <br>
+        <p class="text-gray-500 dark:text-gray-400">The rest of the game explores this mechanic, where the player shifts between isometric, side, and top views to progress. Some of these puzzles are depicted in the montage below. The game's story and aesthetics lend themselves to the feeling of unease. We intended the player to innately feel that they are in a place where they shouldn't be, and that escape should be their goal. This is further solidified when the antagonist instructs the player to walk into lasers to "decommission" them. In fact, the use of diegetic instruction is how the player learns, or rather, figures out how to escape Disha's predicament (who is referred to as D-1584 in the game). </p>
+        <br>
+        <p class="text-gray-500 dark:text-gray-400">According to the rules of the problem statement, the distinction among the three levels must make sense with regard to progression, story, and mechanics. For Viewport, the first level is disguised as scientific tests that the player must complete. T.E.S.S. shows off its true intentions in the second level, when it tries to kill the player. The third level is an escape sequence, where the player must get through a series of falling blocks and moving platforms to escape the facility.</p>
+        <br>
+        <video src = "assets/Viewport Video 2.mp4" class = "contentMedia" autoplay muted loop></video>
+        <br>
+        <p class="text-gray-500 dark:text-gray-400">I wish to talk a little more about how we made the gameplay mechanic. As is hopefully apparent, what you see in a level is exactly how that level is set; your view is reality. This was easy enough to do for side view. You take all platforms in the level, and extend their box colliders infinitely in the direction of the line of view. This makes them behave effectively like 2 - dimensional sprites. Isometric view uses a different trick. Since the camera is orthographic, any translation along the line of view of the camera is invisible. We use this property by moving all platforms along the line of view of the camera, up towards the camera till they all exist at the same Y - level. This makes all the platforms aligned, and nothing looks different. Movement is smooth and glitch-free because of this simple solution. The top view has the easiest implementation - the player just gets teleported to a higher platform (or a lower platform) if they are aligned in top view.</p>
+        <br>
+        <p class="text-gray-500 dark:text-gray-400">We presented Viewport at IIT Patna. Since IIT Gandhinagar was the last to present, we had the privilege (and the anxiety) of watching the games created by our 22 competitor teams first. The competition was fierce, with some incredible entries on display.</p>
+        <br>
+        <p class="text-gray-500 dark:text-gray-400">When our turn finally came, Viewport stood out. It resonated well with the judge, who genuinely enjoyed playing the game. To our relief (and slight surprise), he said that he had not found any bugs in our game when he played it. Our efforts were rewarded when we were announced as the Silver Medalists. It felt like a huge victory for me and my club. What a way to end the year! Also, here is the hardware we brought home!</p>
+        <br>
+        <img src = "assets/Inter IIT trophy pics.png" class = "contentMedia"></img>
+    </div>
+
+    <!-- Line -->
+ <div class="inline-flex items-center justify-center w-full">
+    <hr class="w-64 h-1 my-8 bg-gray-200 border-0 rounded dark:bg-gray-700">
+    <div class="absolute px-4 -translate-x-1/2 bg-white left-1/2 dark:bg-gray-900">
+        <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
+            <li>
+                <!-- Github -->
+                <a href="https://github.com/Diver202" class = "socialIcon" >
+                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M12.006 2a9.847 9.847 0 0 0-6.484 2.44 10.32 10.32 0 0 0-3.393 6.17 10.48 10.48 0 0 0 1.317 6.955 10.045 10.045 0 0 0 5.4 4.418c.504.095.683-.223.683-.494 0-.245-.01-1.052-.014-1.908-2.78.62-3.366-1.21-3.366-1.21a2.711 2.711 0 0 0-1.11-1.5c-.907-.637.07-.621.07-.621.317.044.62.163.885.346.266.183.487.426.647.71.135.253.318.476.538.655a2.079 2.079 0 0 0 2.37.196c.045-.52.27-1.006.635-1.37-2.219-.259-4.554-1.138-4.554-5.07a4.022 4.022 0 0 1 1.031-2.75 3.77 3.77 0 0 1 .096-2.713s.839-.275 2.749 1.05a9.26 9.26 0 0 1 5.004 0c1.906-1.325 2.74-1.05 2.74-1.05.37.858.406 1.828.101 2.713a4.017 4.017 0 0 1 1.029 2.75c0 3.939-2.339 4.805-4.564 5.058a2.471 2.471 0 0 1 .679 1.897c0 1.372-.012 2.477-.012 2.814 0 .272.18.592.687.492a10.05 10.05 0 0 0 5.388-4.421 10.473 10.473 0 0 0 1.313-6.948 10.32 10.32 0 0 0-3.39-6.165A9.847 9.847 0 0 0 12.007 2Z" clip-rule="evenodd"/>
+                  </svg>
+                  </a>
+            </li>
+            <li>
+                <!-- Instagram -->
+                <a href="https://www.instagram.com/diver202_/" class = "socialIcon" >
+                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path fill="currentColor" fill-rule="evenodd" d="M3 8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8Zm5-3a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H8Zm7.597 2.214a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2h-.01a1 1 0 0 1-1-1ZM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm-5 3a5 5 0 1 1 10 0 5 5 0 0 1-10 0Z" clip-rule="evenodd"/>
+                  </svg>
+                  </a>
+            </li>
+            <li>
+                <!-- LinkedIn -->
+                <a href="https://www.linkedin.com/in/divyansh-sharma-00298b1b3/" class = "socialIcon" >
+                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M12.51 8.796v1.697a3.738 3.738 0 0 1 3.288-1.684c3.455 0 4.202 2.16 4.202 4.97V19.5h-3.2v-5.072c0-1.21-.244-2.766-2.128-2.766-1.827 0-2.139 1.317-2.139 2.676V19.5h-3.19V8.796h3.168ZM7.2 6.106a1.61 1.61 0 0 1-.988 1.483 1.595 1.595 0 0 1-1.743-.348A1.607 1.607 0 0 1 5.6 4.5a1.601 1.601 0 0 1 1.6 1.606Z" clip-rule="evenodd"/>
+                    <path d="M7.2 8.809H4V19.5h3.2V8.809Z"/>
+                  </svg>
+                  </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+
+
+    <!-- SCRIPT REF -->
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+
+</body>
+</html>
