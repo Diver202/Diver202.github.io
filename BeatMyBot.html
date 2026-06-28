@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A look at Looker Studio</title>
+    <title>Beat My Bot</title>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
     <link href="blogs.css" rel = "stylesheet" />
     <!-- HIGHLIGHT.JS -->
@@ -20,7 +20,7 @@
     <img class = "banner" src="assets/Snake Post BG.png">
 
     <div class = "text">
-        <h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Beat My Bot</h1></h1>
+        <h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Beat My Bot</h1>
         
         
         <p class="mb-3 text-gray-500 dark:text-gray-400  first-letter:text-7xl first-letter:font-bold first-letter:text-gray-900 dark:first-letter:text-gray-100 first-letter:me-3 first-letter:float-start">Ever since I became the Game Development secretary, I had the idea of doing some sort of AI contest, where participants would create their AIs for some game, and they would battle it out in a tournament. Last December, while working on the Inter IIT submission, we came up with this idea of creating a Snake AI tournament. And since my college's flagship hackathon - Hackrush was coming up, we thought this would be the perfect time to host it.</p>
@@ -34,120 +34,144 @@
 
         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
 
-        <!-- Setting up your first report -->
         <h2 class="text-4xl font-bold dark:text-white">The Engine</h2>
         <br>
 
-        <p class="text-gray-500 dark:text-gray-400"> This was primarily handled by other team members, including Siddhesh, Hem and Nilay.</p>
+        <p class="text-gray-500 dark:text-gray-400"> This was primarily handled by other team members, including Siddhesh, Hem and Nilay. The engine is primarily written in Go, and works as detailed here. The bots that the players make come with a config file, which identifies who they are. The engine communicates with the bots using IPC streams via stdin and stdout. </p>
         <br>
-        <img src = "assets/lookerStudio/sign in.png" class = "contentMedia">
+        <p class="text-gray-500 dark:text-gray-400">Now, every turn, the game state is serialised, and written to the bot's input. Cleverly, the engine automatically swaps the snake array order before sending the payload, so that from the receiving bot's perspective, they are always indexed 0. The engine then listens on stdout for a JSON response, which contains the direction the bot will move in, and a boolean "shed", which says if the bot will shed its skin or not.</p>
         <br>
+        <img src = "assets/BeatMyBot1.png" class = "contentMedia">
+        <br>
+        <p class="text-gray-500 dark:text-gray-400">Now feels like a good time to go over the rules.</p>
+        <br>
+        <h2 class="mb-2 text-2xl font-semibold text-gray-900 dark:text-white">The Rules</h2>
+        <ol class="space-y-1 text-gray-500 list-decimal list-inside dark:text-gray-400">
+            <li class="text-gray-500 dark:text-gray-400">The basic rule is the same as any old game of Snake. You, or in this case, your AI controls a snake. Every turn you specify which way your snake moves. There are apples, and you can eat them. You die if you hit yourself or the wall.</li>
+            <li class="text-gray-500 dark:text-gray-400">But, of course, there is another snake here. Hitting the body of the other snake also kills you. If both snakes get into a head on collision, the longer one survives.</li>
+            <li class="text-gray-500 dark:text-gray-400">Each snake has "energy", which goes down every turn. If it runs out, the snake dies. Eating any apple restores your energy.</li>
+            <li class="text-gray-500 dark:text-gray-400">Speaking of apples, there are four types of apples in the game. Here is what they do:
 
-
-        <h2 class="mb-2 text-2xl font-semibold text-gray-900 dark:text-white">2. Connecting a data source</h2>
-        <p class="text-gray-500 dark:text-gray-400">Create a blank report. Now, you must connect a data source from which you will create the graphs and draw inferences. This data source can be other looker sheets, spreadsheets, locally stored csv files, Google advertisement analytics, YouTube analytics, Databases, among many, many other connecting sources.</p>
-        <br>
-        <img src = "assets/lookerStudio/add data.png" class = "contentMedia">
-        <br>
-
-
-        <h2 class="mb-2 text-2xl font-semibold text-gray-900 dark:text-white">3. Start charting!</h2>
-        <p class="text-gray-500 dark:text-gray-400">Now that you have connected your data, upload it to your report. For this demonstration, I have used the Titanic dataset csv. Add charts, apply filters and calculated fields as needed. Customise the themes and colours to enhance the aesthetic and readability!</p>
-        <br>
-        <img src = "assets/lookerStudio/Charting.png" class = "contentMedia">
-        <br>
-
-        <br>
-        <h2 class="text-4xl font-bold dark:text-white">Key Features</h2>
-        <br>
-        <ol class=" space-y-1 text-gray-500 list-decimal list-inside dark:text-gray-400">
-            <li>
-                <span class="font-semibold text-gray-900 dark:text-white">Data Connectivity: </span>Supports integration with various Google and third-party data sources.
+                <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+                    <table class="w-full text-sm text-left rtl:text-right text-body">
+                        <thead class="text-sm text-body bg-neutral-secondary-medium border-b border-default-medium">
+                            <tr>
+                                <th scope="col" class="px-16 py-3">
+                                    <span class="sr-only">Image</span>
+                                </th>
+                                <th scope="col" class="px-6 py-3 font-medium">
+                                    Apple
+                                </th>
+                                <th scope="col" class="px-6 py-3 font-medium">
+                                    Length change
+                                </th>
+                                <th scope="col" class="px-6 py-3 font-medium">
+                                    Status effect
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                                <td class="p-4">
+                                    <img src="/assets/Apple1.png" class="w-16 md:w-24 max-w-full max-h-full" alt="Apple Watch">
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-heading">
+                                    Apple
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-heading">
+                                    +1
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-heading">
+                                    None
+                                </td>
+                            </tr>
+                            <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                                <td class="p-4">
+                                    <img src="/assets/Apple3.png" class="w-16 md:w-24 max-w-full max-h-full" alt="Apple iMac">
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-heading">
+                                    Golden Apple
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-heading">
+                                    +3
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-heading">
+                                    None
+                                </td>
+                            </tr>
+                            <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                                <td class="p-4">
+                                    <img src="/assets/Apple5.png" class="w-16 md:w-24 max-w-full max-h-full" alt="iPhone 12">
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-heading">
+                                    Speed Apple
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-heading">
+                                    +1
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-heading">
+                                    Move two squares in one turn for 5 turns
+                                </td>
+                            </tr>
+                            <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                                <td class="p-4">
+                                    <img src="/assets/Apple4.png" class="w-16 md:w-24 max-w-full max-h-full" alt="iPhone 12">
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-heading">
+                                    Slowdown Apple
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-heading">
+                                    +1
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-heading">
+                                    Freeze the other player for 5 turns
+                                </td>
+                            </tr>
+                                        <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                                <td class="p-4">
+                                    <img src="/assets/Apple2.png" class="w-16 md:w-24 max-w-full max-h-full" alt="iPhone 12">
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-heading">
+                                    Poison Apple
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-heading">
+                                    -1
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-heading">
+                                    None
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </li>
-            <li>
-                <span class="font-semibold text-gray-900 dark:text-white">Drag and Drop Interface: </span>User friendly, no coding required.
-            </li>
-            <li>
-                <span class="font-semibold text-gray-900 dark:text-white">Customisable charts and visualisations: </span>Bar charts, pie charts, maps, trees among others.
-            </li>
-            <li>
-                <span class="font-semibold text-gray-900 dark:text-white">Calculated metrics: </span>Allows users to draw inferences and make the data more meaningful
-            </li>
-            <li>
-                <span class="font-semibold text-gray-900 dark:text-white">Collaboration: </span>Real-time editing and sharing is possible.
-            </li>
+            <li class="text-gray-500 dark:text-gray-400">V2 addition: There are now trees that spawn apples. Green trees spawn regular apples around them, and golden trees spawn Golden, Speed and Slowdown apples. Hitting the trees kills the snake.</li>
+            <li class="text-gray-500 dark:text-gray-400">V2 addition: Regular apples, if left out for too long (25 turns), will spoil to form poison apples.</li>
+            <li class="text-gray-500 dark:text-gray-400">V2 addition: The snakes can choose to "shed" their skin at any turn. This is passed as a boolean, along with their movement direction for that turn. Shedding skin requires 5 energy. This shed skin can act as an obstacle.</li>
+            <li class="text-gray-500 dark:text-gray-400">At the end of 500 turns, if both snakes are alive, then the longer one wins.</li>
         </ol>
         <br>
+        <p class="text-gray-500 dark:text-gray-400"> For every turn, the participant's script has a time limit of 500ms. If they exceed this turn, or submit an invalid move, then they keep moving in the direction they were previously. To ensure that the 500ms timeout is fair across varying hardware, the engine runs an automatic calibration, which benchmarks the host's machine.</p>
+        <br>
+        <p class="text-gray-500 dark:text-gray-400">Every state iteration, directional move, timeout instance, and execution time is appended to a record. Upon game completion, this data is compiled alongside timeout counts and error counts statistics into a "matchReplay" JSON file which is read by the simulator.</p>
+        <br>
+        <h2 class="text-4xl font-bold dark:text-white">The Simulator</h2>
+        <br>
+        <p class="text-gray-500 dark:text-gray-400">While the engine handles the game logic and bot execution, the simulator is a dedicated Unity environment built strictly for visualisation. We provided a simulator, or more of a rudimentary match status in the terminal itself, which looks like this:</p>
+        <br>
+        <video src = "assets/Terminal Simulator.mp4" class = "contentMedia" autoplay muted loop></video>
+        <br>
+        <p class="text-gray-500 dark:text-gray-400">To get more meaningful insights out of your matches, (and because frankly it looks terrible), I built an application in Unity, which will read the match replay JSON file, and acts as a playback client. The match replay JSON is loaded in, parsed into data structures, which hold sequential turn records, coordinates, and event triggers (timeouts or deaths). It iterates through the data step by step, and transforms grid coordinates into 3D movements.</p>
+        <br>
+        <p class="text-gray-500 dark:text-gray-400">According to the data, the simulator creates the appropriately sized grid board, then instantiates the obstacles, and on every turn, instantiates and removes prefabs for the player's bodies, apples, shed skin and trees. Also the UI displays the names of the competing bots, their lengths and their energies. Additionally, you can choose to load up any game file from the simulator itself, pause the simulation, take it step by step, and also change the speed of the match replay.</p>
+        <br>
+        <video src = "assets/Simulator.mp4" class = "contentMedia" autoplay muted loop></video>
+        <br>
+        <p class="text-gray-500 dark:text-gray-400">Building Beat My Bot from a simple idea discussed during our Inter IIT prep into a fully realized Hackrush tournament has been incredibly rewarding. This competition marks the final major project of my current term as DigiS Secretary, and seeing the participants push the engine to its limits was the absolute perfect way to wrap things up.</p>
+        <br>
         
+        <p class="text-gray-500 dark:text-gray-400">Between the late-night coding sessions, building out the simulator, and watching the final tournament unfold, I couldn't be prouder of what our team accomplished. And while this officially closes out my tenure, the club recently secured a brand-new, high-performance gaming PC. I’m already looking forward to seeing what we build next!</p>
         <br>
-        <h2 class="text-4xl font-bold dark:text-white">Examples</h2>
-        <br>
-
-        <h2 class="mb-2 text-2xl font-semibold text-gray-900 dark:text-white">1. Creating a calculated field</h2>
-        <p class="text-gray-500 dark:text-gray-400">Let’s add another field to check the survival rate for the titanic dataset. Using the following formula:</p>
-        <pre><code class="language-python">
-(SUM(Survived) / COUNT(PassengerId))
-            </code></pre>
-        <br>
-        <img class = "contentMedia" src = "assets/lookerStudio/Calculated Field.png">
-        <br>
-        <p class="text-gray-500 dark:text-gray-400">Add a scorecard which will show you the overall survival rate of the passengers.</p>
-
-        <br>
-        <img class = "contentMedia" src = "assets/lookerStudio/Scorecard.png">
-        <br>
-
-        <h2 class="mb-2 text-2xl font-semibold text-gray-900 dark:text-white">2. Categorising age groups</h2>
-        <p class="text-gray-500 dark:text-gray-400">Now lets check out the survival rate of different age groups for Titanic. For this, add another field "Age Group" for categorising as follows:</p>
-        <pre><code class="language-python">
-CASE 
-    WHEN CAST(Age AS NUMBER) < 18 THEN "Child"
-    WHEN CAST(Age AS NUMBER) BETWEEN 18 AND 35 THEN "Young Adult"
-    WHEN CAST(Age AS NUMBER) BETWEEN 36 AND 50 THEN "Middle Aged"
-    WHEN CAST(Age AS NUMBER) > 50 THEN "Senior"
-    ELSE "Unknown"
-END
-        </code></pre>
-        <br>
-        <p class="text-gray-500 dark:text-gray-400">We casted the age field as a number, because looker studio was reading it as a text datatype.</p>
-        <br>
-        <p class="text-gray-500 dark:text-gray-400">Now, lets plot the survival rate of different age groups in a bar chart. The unkown values are for records with missing age fields.</p>
-        <br>
-        <img src = "assets/lookerStudio/SurvivalRate by Age.png" class = "contentMedia">
-        <br>
-
-        <h2 class="mb-2 text-2xl font-semibold text-gray-900 dark:text-white">3. Categorising by family size.</h2>
-        <p class="text-gray-500 dark:text-gray-400">Add a field to for the family size of the individual on board. This is calculated by adding the number of siblings, the number of parents and 1 for the person themselves.</p>
-        <pre><code class="language-python">
-Sibsp + Parch + 1
-    </code></pre>
-    <br>
-    <img src = "assets/lookerStudio/SurvivalRate by family size.png">
-    <br>
-
-    <!-- Applications -->
-    <br>
-    <h2 class="text-4xl font-bold dark:text-white">Applications</h2>
-    <br>
-    <p class="text-gray-500 dark:text-gray-400">Looker Studio is used by businesses, individuals, institutions and hobbyists to make beautiful representations of their data. It is used in various domains like <span class="font-semibold text-gray-900 dark:text-white">Marketing Performance Analysis, Sales and Revenue Reporting, Customer Engagement Tracking, Social Media analytics </span>, and <span class="font-semibold text-gray-900 dark:text-white">Financial Data.</span></p>
-    <br>
-
-    <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
-
-    <p class="text-gray-500 dark:text-gray-400">In conclusion, Looker Studio is a powerful and accessible tool for data visualization and reporting. Its integration capabilities, ease of use, and interactive features make it an essential tool for businesses and analysts. By following this guide, users can set up and utilize Looker Studio effectively to transform data into actionable insights.</p>
-
-    <!-- Further Reading -->
-    <br>
-    <h2 class="text-4xl font-bold dark:text-white">Further Reading</h2>
-    <br>
-    <ol class="space-y-1 text-gray-500 list-decimal list-inside dark:text-gray-400">
-        <li><a href="https://support.google.com/lookerstudio/" target="_blank" class="text-blue-600 hover:underline dark:text-blue-400">Looker Studio Official Documentation</a></li>
-        <li><a href="https://cloud.google.com/bigquery/docs/" target="_blank" class="text-blue-600 hover:underline dark:text-blue-400">Google Cloud BigQuery Integration Guide</a></li>
-        <li><a href="https://developers.google.com/sheets/api" target="_blank" class="text-blue-600 hover:underline dark:text-blue-400">Google Sheets API for Looker Studio</a></li>
-        <li><a href="https://lookerstudio.google.com/u/0/reporting" target="_blank" class="text-blue-600 hover:underline dark:text-blue-400">Community Tutorials and Case Studies</a></li>
-    </ol>
-
-        
     </div>
 
     <!-- Line -->
